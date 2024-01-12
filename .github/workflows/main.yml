@@ -1,9 +1,5 @@
 name: cicd-python
 
-env:
-  BLUE_VM: 172.16.10.50
-  GREEN_VM: 172.16.10.51
-  
 on:
   push:
     branches:
