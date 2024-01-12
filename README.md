@@ -1,2 +1,2 @@
-# Python_Test_CICD
+# Readme
 Demo repository for Python CICD Actions linked to [homelab_devsecop](https://github.com/initcyber/homelab_devsecop)
