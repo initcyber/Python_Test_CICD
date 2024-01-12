@@ -1,40 +1,81 @@
-name: cicd-python
+# Name of this GitHub Actions workflow.
+name: Semgrep
 
 on:
+  # Scan changed files in PRs (diff-aware scanning):
+  pull_request: {}
+  # Scan on-demand through GitHub Actions interface:
+  workflow_dispatch: {}
+  # Scan mainline branches and report all findings:
   push:
-    branches:
-      - main
+    branches: ["master", "main"]
+  # Schedule the CI job (this method uses cron syntax):
+  schedule:
+    - cron: '20 17 * * *' # Sets Semgrep to scan every day at 17:20 UTC.
+    # It is recommended to change the schedule to a random time.
 
 jobs:
-  build:
+  semgrep:
+    # User definable name of this GitHub Actions job.
+    name: semgrep/ci 
+    # If you are self-hosting, change the following `runs-on` value: 
     runs-on: ubuntu-latest
+
+    container:
+      # A Docker image with Semgrep installed. Do not change this.
+      image: returntocorp/semgrep
+
+    # Skip any PR created by dependabot to avoid permission issues:
+    if: (github.actor != 'dependabot[bot]')
+
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v4
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
-          
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-        name: Tailscale
-        uses: tailscale/github-action@v2
-        with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:cicd-python
+      # Fetch project source with GitHub Actions Checkout.
+      - uses: actions/checkout@v3
+      # Run the "semgrep ci" command on the command line of the docker image.
+      - run: semgrep ci
+        env:
+          # Connect to Semgrep Cloud Platform through your SEMGREP_APP_TOKEN.
+          # Generate a token from Semgrep Cloud Platform > Settings
+          # and add it to your GitHub secrets.
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+#name: cicd-python
+
+#on:
+#  push:
+#    branches:
+#      - main
+
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      -
+#        name: Checkout
+#        uses: actions/checkout@v4
+#      -
+#        name: Login to Docker Hub
+#        uses: docker/login-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#      -
+#        name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v3
+#      -
+#        name: Build and push
+#        uses: docker/build-push-action@v5
+#        with:
+#          context: .
+#          push: true
+#          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+#          
+#  deploy:
+#    runs-on: ubuntu-latest
+#    steps:
+#        name: Tailscale
+#        uses: tailscale/github-action@v2
+#        with:
+#          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+#          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+#          tags: tag:cicd-python
