@@ -39,8 +39,8 @@ jobs:
       
       #step4: Code scan
       - name: Scan
-        env:
-          SEMGREP_RULES_PATH: ./SemgrepRules
+    #    env:
+    #      SEMGREP_RULES_PATH: ./SemgrepRules
         run: |
           python -m semgrep --config "p/ci" --config auto . --output $(date +"%d-%m-%Y").json --json > scanSummry.txt 2>&1
 
