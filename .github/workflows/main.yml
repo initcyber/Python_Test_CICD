@@ -5,9 +5,6 @@ on:
       Repo_token:
         required: true
 
-env:
-  BUCKET_NAME : "semgrep-report"
-  AWS_REGION : "eu-west-1"
 
 permissions:
       id-token: write   # This is required for requesting the JWT
