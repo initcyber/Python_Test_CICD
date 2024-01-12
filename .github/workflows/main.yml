@@ -1,5 +1,9 @@
 name: cicd-python
 
+env:
+  BLUE_VM: 172.16.10.50
+  GREEN_VM: 172.16.10.51
+  
 on:
   push:
     branches:
@@ -28,7 +32,10 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
-      - 
+          
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
         name: Tailscale
         uses: tailscale/github-action@v2
         with:
