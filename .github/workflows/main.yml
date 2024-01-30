@@ -71,7 +71,7 @@ jobs:
           
       # step8: authenticate with Tailscale
       - name: Connect to Homelab
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_STS }}
           role-session-name: GHASeesion
