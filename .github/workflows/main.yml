@@ -51,7 +51,7 @@ jobs:
 
       #step6: Push report to artifact.
       - name: save report as pipeline artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
             name: ${{ steps.date.outputs.date }}.json
             path: .
