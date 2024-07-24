@@ -17,7 +17,7 @@ jobs:
     
     #step1: Checkout semgrep rules
       - name: Checkout Semgrep rules
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: initcyber/SemgrepRules
           ref: main
@@ -27,7 +27,7 @@ jobs:
 
     #step2: Checkout Code.
       - name: clone application source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: ./code
     
